@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy to Google Sheets</title>
+</head>
+<body>
+    <h1>Proxy to Google Sheets</h1>
+    <script>
+        async function handleRequest() {
+            // دریافت پارامترها از URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const score = urlParams.get('score');
+
+            if (!id || !score) {
+                document.body.innerHTML += '<p>Missing parameters!</p>';
+                return;
+            }
+
+            // ارسال درخواست به Google Sheets
+            const googleSheetsURL = "https://script.google.com/macros/s/AKfycbxyq7cw16pq3SWWKnTZSV5_6ennw6HguZKKgLKrSW35YcgtHeFftSk1oS5nY0KLXtJ2Ww/exec";
+            try {
+                const response = await fetch(`${googleSheetsURL}?id=${id}&score=${score}`);
+                const data = await response.json();
+
+                // نمایش پاسخ
+                document.body.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.body.innerHTML += `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        // اجرای درخواست هنگام بارگذاری صفحه
+        handleRequest();
+    </script>
+</body>
+</html>
